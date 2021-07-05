@@ -23,11 +23,34 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.kafka:spring-kafka'
+	implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: '3.2.2'
+	implementation group: 'org.axonframework', name: 'axon-messaging', version: '4.5.2'
+	implementation group: 'org.axonframework', name: 'axon-core', version: '4.0-M2'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+
+	//Swagger dependencies
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+	implementation group: 'io.springfox', name: 'springfox-data-rest', version: '3.0.0'
+	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+
+	//slf4j dependencies
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.31'
+
+	//Axon
+	implementation group: 'org.axonframework', name: 'axon-spring-boot-starter', version: '4.5.2'
+	implementation group: 'org.axonframework', name: 'axon-mongo', version: '4.0-M2'
+	implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.8'
+	implementation group: 'org.axonframework.extensions.mongo', name: 'axon-mongo', version: '4.4'
+	implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: '3.2.2'
+	implementation group: 'org.axonframework', name: 'axon-eventsourcing', version: '4.5.2'
+	implementation group: 'org.axonframework', name: 'axon-configuration', version: '4.5.2'
+
 }
 
 test {
