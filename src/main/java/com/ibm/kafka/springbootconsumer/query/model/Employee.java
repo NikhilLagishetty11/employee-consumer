@@ -1,19 +1,22 @@
-package com.ibm.kafka.springbootconsumer.query.entity;
+package com.ibm.kafka.springbootconsumer.query.model;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "user")
+@Document(collection = "user_prj")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Employee {
 
-
-    private String id;
+    @Id
+    private String empId;
     private String firstName;
     private String lastName;
     private String email;

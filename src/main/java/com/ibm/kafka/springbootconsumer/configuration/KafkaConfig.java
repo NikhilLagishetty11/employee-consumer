@@ -10,9 +10,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,23 +42,19 @@ public class KafkaConfig {
 
     @Bean
     public ConsumerFactory<String, Employee> userConsumerFactory() {
-        Map<String, Object> config = new HashMap<>();
 
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, "group_json");
+        JsonDeserializer<Employee> deserializer = new JsonDeserializer<>(Employee.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
+        Map<String, Object> config = new HashMap<>();
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "user-group");
+        config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        config.put(JsonSerializer.TYPE_MAPPINGS, "employee:com.ibm.kafka.springbootproducer.requestDTO.Employee");   //
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "employee:com.ibm.kafka.springbootconsumer.command.model.Employee");  //
-        config.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS,StringDeserializer.class);  //
-        config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class); //
-//        config.put(JsonDeserializer.TRUSTED_PACKAGES, "com.ibm.kafka.springbootproducer.requestDTO.Employee");  //
-        config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");  //
-
-        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(),
-                new JsonDeserializer<>(Employee.class));
-
-
+        return new DefaultKafkaConsumerFactory<String,Employee>(config, new StringDeserializer(),deserializer);
 
     }
 
@@ -71,8 +65,6 @@ public class KafkaConfig {
         factory.setConsumerFactory(userConsumerFactory());
         return factory;
     }
-
-
 
 
 }
