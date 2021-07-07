@@ -1,4 +1,4 @@
-package com.ibm.kafka.springbootconsumer.query.model;
+package com.ibm.kafka.springbootconsumer.common.model;
 
 
 import lombok.AllArgsConstructor;

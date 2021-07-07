@@ -1,9 +1,13 @@
 package com.ibm.kafka.springbootconsumer;
 
 
-import com.ibm.kafka.springbootconsumer.command.model.DeleteEmployeeById;
-import com.ibm.kafka.springbootconsumer.command.model.Employee;
+import com.ibm.kafka.springbootconsumer.command.api.UserController;
+import com.ibm.kafka.springbootconsumer.command.dto.AddUserRequest;
+import com.ibm.kafka.springbootconsumer.common.model.DeleteEmployeeById;
+import com.ibm.kafka.springbootconsumer.common.model.EmployeeConsumeModel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +16,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmployeeConsumer {
 
-//    private EmployeeCommandService employeeCommandService;
-//
-//    @Autowired
-//    private EmployeeRepository repo;
+
+    @Autowired
+    UserController userController;
 
     @KafkaListener(topics = "second_topic", groupId = "group_json", containerFactory = "userKafkaListenerFactory")
-    public void add(Employee employee){
-//    public CompletableFuture<Employee> addEmployee(Employee employee){
-
-        log.info(employee.getEmpId());
-        log.info(employee.getEmail());
-//         repo.save(employee);
-//        System.out.println("the date is consumed");
-//        return this.employeeCommandService.addEmployee(employee);
+    public void add(EmployeeConsumeModel employeeConsumeModel){
+        AddUserRequest command = new AddUserRequest();
+        BeanUtils.copyProperties(employeeConsumeModel,command);
+        userController.saveUser(command);
     }
 
 

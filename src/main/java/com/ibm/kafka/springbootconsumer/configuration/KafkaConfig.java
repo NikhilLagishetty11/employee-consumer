@@ -1,7 +1,7 @@
 package com.ibm.kafka.springbootconsumer.configuration;
 
 
-import com.ibm.kafka.springbootconsumer.command.model.Employee;
+import com.ibm.kafka.springbootconsumer.common.model.EmployeeConsumeModel;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -41,9 +41,9 @@ public class KafkaConfig {
 
 
     @Bean
-    public ConsumerFactory<String, Employee> userConsumerFactory() {
+    public ConsumerFactory<String, EmployeeConsumeModel> userConsumerFactory() {
 
-        JsonDeserializer<Employee> deserializer = new JsonDeserializer<>(Employee.class);
+        JsonDeserializer<EmployeeConsumeModel> deserializer = new JsonDeserializer<>(EmployeeConsumeModel.class);
         deserializer.setRemoveTypeHeaders(false);
         deserializer.addTrustedPackages("*");
         deserializer.setUseTypeMapperForKey(true);
@@ -54,13 +54,13 @@ public class KafkaConfig {
         config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        return new DefaultKafkaConsumerFactory<String,Employee>(config, new StringDeserializer(),deserializer);
+        return new DefaultKafkaConsumerFactory<String, EmployeeConsumeModel>(config, new StringDeserializer(),deserializer);
 
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Employee> userKafkaListenerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Employee> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, EmployeeConsumeModel> userKafkaListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, EmployeeConsumeModel> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setMissingTopicsFatal(false);
         factory.setConsumerFactory(userConsumerFactory());
         return factory;

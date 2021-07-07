@@ -1,7 +1,7 @@
 package com.ibm.kafka.springbootconsumer.query.dto;
 
 import com.ibm.kafka.springbootconsumer.common.BaseResponse;
-import com.ibm.kafka.springbootconsumer.query.model.Employee;
+import com.ibm.kafka.springbootconsumer.common.model.Employee;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,6 @@
-package com.ibm.kafka.springbootconsumer.command.model;
+package com.ibm.kafka.springbootconsumer.command.command;
 
 
-
-import com.ibm.kafka.springbootconsumer.command.event.AddedEmployeeEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee {
+public class AddUserCommand {
+
 
     private String empId;
     private String firstName;
@@ -19,6 +18,4 @@ public class Employee {
     private String address;
 
 
-    public Employee(AddedEmployeeEvent event) {
-    }
 }

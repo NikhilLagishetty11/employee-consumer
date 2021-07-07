@@ -4,7 +4,7 @@ import com.ibm.kafka.springbootconsumer.query.dto.UserLookupResponse;
 import com.ibm.kafka.springbootconsumer.query.query.FindAllUsersQuery;
 import com.ibm.kafka.springbootconsumer.query.query.FindUserByIdQuery;
 import com.ibm.kafka.springbootconsumer.query.query.SearchUsersQuery;
-import com.ibm.kafka.springbootconsumer.query.repository.UserRepository;
+import com.ibm.kafka.springbootconsumer.common.repository.UserRepository;
 import lombok.var;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UserQueryHandlerImpl implements UserQueryHandler {
     @Override
     public UserLookupResponse getUserById(FindUserByIdQuery query){
         var employee= userRepository.findById(query.getEmpId());
-        return employee.isPresent() ? new UserLookupResponse(employee.get()): null;
+        return employee.map(UserLookupResponse::new).orElse(null);
     }
 
     @QueryHandler
