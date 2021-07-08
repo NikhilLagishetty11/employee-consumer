@@ -9,6 +9,8 @@ import com.ibm.kafka.springbootconsumer.command.command.UpdateUserCommand;
 import com.ibm.kafka.springbootconsumer.command.event.UserAddedEvent;
 import com.ibm.kafka.springbootconsumer.command.event.UserDeletedEvent;
 import com.ibm.kafka.springbootconsumer.command.event.UserUpdatedEvent;
+import com.ibm.kafka.springbootconsumer.command.service.UserService;
+import com.ibm.kafka.springbootconsumer.command.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,7 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
@@ -27,6 +30,9 @@ import java.util.UUID;
 @Getter
 @Aggregate
 public class UserAggregate  {
+
+
+
 
     @AggregateIdentifier
     private String empId;
@@ -39,9 +45,10 @@ public class UserAggregate  {
 
 
     @CommandHandler
-    public UserAggregate(AddUserCommand command){
+    public UserAggregate(AddUserCommand command, @Autowired UserService service){
 
         log.info("Entered the AddUserCommand handler");
+         service.addUser(command);
         AggregateLifecycle.apply(new UserAddedEvent(
                 command.getEmpId(),
                 command.getFirstName(),
@@ -50,16 +57,18 @@ public class UserAggregate  {
 
 
     @CommandHandler
-    public UserAggregate(DeleteUserCommand command){
+    public UserAggregate(DeleteUserCommand command, @Autowired UserService service){
         log.info("Entered the deleteUserCommand handler");
+        service.deleteUser(command);
         AggregateLifecycle.apply(new UserDeletedEvent(
                 command.getEmail()));
     }
 
 
     @CommandHandler
-    public UserAggregate(UpdateUserCommand command){
+    public UserAggregate(UpdateUserCommand command, @Autowired UserService service){
         log.info("Entered the updateUserCommand handler");
+        service.updateUser(command);
         AggregateLifecycle.apply(new UserUpdatedEvent(command.getEmpId(),
                 command.getFirstName(),
                 command.getLastName(),command.getEmail(),command.getAddress()));
