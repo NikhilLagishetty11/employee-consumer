@@ -3,8 +3,11 @@ package com.ibm.kafka.springbootconsumer;
 
 import com.ibm.kafka.springbootconsumer.command.api.UserController;
 import com.ibm.kafka.springbootconsumer.command.dto.AddUserRequest;
-import com.ibm.kafka.springbootconsumer.common.model.DeleteEmployeeById;
-import com.ibm.kafka.springbootconsumer.common.model.EmployeeConsumeModel;
+import com.ibm.kafka.springbootconsumer.command.dto.DeleteByIdRequest;
+import com.ibm.kafka.springbootconsumer.command.dto.UpdateByIdRequest;
+import com.ibm.kafka.springbootconsumer.common.model.AddEmployeeConsumeModel;
+import com.ibm.kafka.springbootconsumer.common.model.DeleteEmployeeByIdConsume;
+import com.ibm.kafka.springbootconsumer.common.model.UpdateEmployeeConsumeModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +24,28 @@ public class EmployeeConsumer {
     UserController userController;
 
     @KafkaListener(topics = "second_topic", groupId = "group_json", containerFactory = "userKafkaListenerFactory")
-    public void add(EmployeeConsumeModel employeeConsumeModel){
-        AddUserRequest command = new AddUserRequest();
-        BeanUtils.copyProperties(employeeConsumeModel,command);
-        userController.saveUser(command);
+    public void add(AddEmployeeConsumeModel addEmployeeConsumeModel){
+        AddUserRequest request = new AddUserRequest();
+        BeanUtils.copyProperties(addEmployeeConsumeModel,request);
+        userController.saveUser(request);
     }
 
 
     @KafkaListener(topics = "delete_employee_topic", groupId = "group_id", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(DeleteEmployeeById deleteById){
+    public void consume(DeleteEmployeeByIdConsume deleteById){
 
-        log.info(deleteById.getEmpId());
+        DeleteByIdRequest request = new DeleteByIdRequest();
+        request.setEmail(deleteById.getEmail().replaceAll("^\"|\"$", ""));
+        userController.deleteUser(request);
+    }
 
-        System.out.println("the date is consumed");
+    @KafkaListener(topics = "update_employee_topic", groupId = "group_json", containerFactory = "UpdateUserKafkaListenerFactory")
+    public void add(UpdateEmployeeConsumeModel updateEmployeeConsumeModel){
+        log.info(updateEmployeeConsumeModel.getAddress());
+
+        UpdateByIdRequest request = new UpdateByIdRequest();
+        BeanUtils.copyProperties(updateEmployeeConsumeModel,request);
+        userController.updateUser(request);
     }
 
 

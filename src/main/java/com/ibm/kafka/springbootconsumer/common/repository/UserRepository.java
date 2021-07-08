@@ -1,6 +1,7 @@
 package com.ibm.kafka.springbootconsumer.common.repository;
 
 
+
 import com.ibm.kafka.springbootconsumer.common.model.Employee;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -13,4 +14,5 @@ public interface UserRepository extends MongoRepository<Employee, String> {
     List<Employee> findByFilterRegex(String filter);
 
 
+    void deleteByEmail(String email);
 }

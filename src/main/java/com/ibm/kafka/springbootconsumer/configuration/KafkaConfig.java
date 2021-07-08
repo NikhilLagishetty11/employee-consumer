@@ -1,7 +1,8 @@
 package com.ibm.kafka.springbootconsumer.configuration;
 
 
-import com.ibm.kafka.springbootconsumer.common.model.EmployeeConsumeModel;
+import com.ibm.kafka.springbootconsumer.common.model.AddEmployeeConsumeModel;
+import com.ibm.kafka.springbootconsumer.common.model.UpdateEmployeeConsumeModel;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -41,9 +42,35 @@ public class KafkaConfig {
 
 
     @Bean
-    public ConsumerFactory<String, EmployeeConsumeModel> userConsumerFactory() {
+    public ConsumerFactory<String, AddEmployeeConsumeModel> userConsumerFactory() {
 
-        JsonDeserializer<EmployeeConsumeModel> deserializer = new JsonDeserializer<>(EmployeeConsumeModel.class);
+        JsonDeserializer<AddEmployeeConsumeModel> deserializer = new JsonDeserializer<>(AddEmployeeConsumeModel.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
+        Map<String, Object> config = new HashMap<>();
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "group_json");
+        config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        return new DefaultKafkaConsumerFactory<String, AddEmployeeConsumeModel>(config, new StringDeserializer(),deserializer);
+
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, AddEmployeeConsumeModel> userKafkaListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, AddEmployeeConsumeModel> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setMissingTopicsFatal(false);
+        factory.setConsumerFactory(userConsumerFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, UpdateEmployeeConsumeModel> updateUserConsumerFactory() {
+
+        JsonDeserializer<UpdateEmployeeConsumeModel> deserializer = new JsonDeserializer<>(UpdateEmployeeConsumeModel.class);
         deserializer.setRemoveTypeHeaders(false);
         deserializer.addTrustedPackages("*");
         deserializer.setUseTypeMapperForKey(true);
@@ -54,15 +81,15 @@ public class KafkaConfig {
         config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        return new DefaultKafkaConsumerFactory<String, EmployeeConsumeModel>(config, new StringDeserializer(),deserializer);
+        return new DefaultKafkaConsumerFactory<String, UpdateEmployeeConsumeModel>(config, new StringDeserializer(),deserializer);
 
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, EmployeeConsumeModel> userKafkaListenerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, EmployeeConsumeModel> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String,UpdateEmployeeConsumeModel> UpdateUserKafkaListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, UpdateEmployeeConsumeModel> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setMissingTopicsFatal(false);
-        factory.setConsumerFactory(userConsumerFactory());
+        factory.setConsumerFactory(updateUserConsumerFactory());
         return factory;
     }
 

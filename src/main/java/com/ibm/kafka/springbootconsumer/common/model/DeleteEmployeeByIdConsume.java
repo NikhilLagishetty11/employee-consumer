@@ -4,11 +4,15 @@ package com.ibm.kafka.springbootconsumer.common.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.axonframework.commandhandling.model.AggregateIdentifier;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeleteEmployeeById {
+public class DeleteEmployeeByIdConsume {
 
-    private String empId;
+    @AggregateIdentifier
+    private String email;
+
+
 }

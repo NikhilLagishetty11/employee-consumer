@@ -1,8 +1,6 @@
-package com.ibm.kafka.springbootconsumer.common.model;
+package com.ibm.kafka.springbootconsumer.command.event;
 
 
-
-import com.ibm.kafka.springbootconsumer.command.event.UserAddedEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,15 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeConsumeModel {
+public class UserUpdatedEvent {
 
     private String empId;
     private String firstName;
     private String lastName;
     private String email;
     private String address;
-
-
-    public EmployeeConsumeModel(UserAddedEvent event) {
-    }
 }
