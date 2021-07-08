@@ -31,13 +31,10 @@ import java.util.UUID;
 @Aggregate
 public class UserAggregate  {
 
-
-
-
     @AggregateIdentifier
-    private String empId;
-
     private String id;
+
+    private String empId;
     private String firstName;
     private String lastName;
     private String email;
@@ -78,6 +75,7 @@ public class UserAggregate  {
     @EventSourcingHandler
     public void on(UserAddedEvent event) {
         log.info("Entered the UserAddedEvent handler");
+        this.id= UUID.randomUUID().toString();
         this.empId = event.getEmpId();
         this.firstName = event.getFirstName();
         this.lastName = event.getLastName();
@@ -88,7 +86,7 @@ public class UserAggregate  {
 
     @EventSourcingHandler
     public void on(UserDeletedEvent event){
-        this.empId= UUID.randomUUID().toString();
+        this.id= UUID.randomUUID().toString();
         log.info("Entered the deleteUserEvent handler" +event.getEmail());
         this.email = event.getEmail();
     }
@@ -96,8 +94,8 @@ public class UserAggregate  {
     @EventSourcingHandler
     public void on(UserUpdatedEvent event){
         log.info("Entered the UserUpdatedEvent handler");
-        this.empId= UUID.randomUUID().toString();
-        this.id = event.getEmpId();
+        this.id= UUID.randomUUID().toString();
+        this.empId = event.getEmpId();
         this.firstName = event.getFirstName();
         this.lastName = event.getLastName();
         this.email= event.getEmail();
