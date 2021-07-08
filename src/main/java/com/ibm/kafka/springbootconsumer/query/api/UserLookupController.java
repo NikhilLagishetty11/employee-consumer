@@ -33,18 +33,12 @@ public class UserLookupController {
              var query = new FindAllUsersQuery();
              var response = queryGateway.query(query, ResponseTypes.instanceOf(UserLookupResponse.class)).join();
 
-
              if(response == null || response.getUsers()==null){
                  return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
              }
-
              return new ResponseEntity<>(response, HttpStatus.OK);
-
          } catch (Exception e){
              var safeErrorMessage = "Failed to get all users request";
-
-             System.out.println(e.toString());
-
              return new ResponseEntity<>(new UserLookupResponse(safeErrorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
          }
     }
@@ -58,10 +52,8 @@ public class UserLookupController {
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(response, HttpStatus.OK);
-
         } catch (Exception e){
             var safeErrorMessage = "Failed to get  user by id  request";
-            System.out.println(e.toString());
             return new ResponseEntity<>(new UserLookupResponse(safeErrorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,12 +67,9 @@ public class UserLookupController {
               if(response == null || response.getUsers()==null){
                   return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
               }
-
               return new ResponseEntity<>(response, HttpStatus.OK);
-
           } catch (Exception e){
               var safeErrorMessage = "Failed to get  user by filter  request";
-              System.out.println(e.toString());
               return new ResponseEntity<>(new UserLookupResponse(safeErrorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
           }
       }

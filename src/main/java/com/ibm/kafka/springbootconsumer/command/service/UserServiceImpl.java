@@ -3,12 +3,13 @@ package com.ibm.kafka.springbootconsumer.command.service;
 import com.ibm.kafka.springbootconsumer.command.command.AddUserCommand;
 import com.ibm.kafka.springbootconsumer.command.command.DeleteUserCommand;
 import com.ibm.kafka.springbootconsumer.command.command.UpdateUserCommand;
+import com.ibm.kafka.springbootconsumer.common.exception.DuplicateUser;
 import com.ibm.kafka.springbootconsumer.common.model.EmployeeCmd;
 import com.ibm.kafka.springbootconsumer.common.repository.UserPrjRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,11 +25,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void addUser(AddUserCommand command){
-
+    public void addUser(AddUserCommand command) throws RuntimeException {
         log.info("entered the add user  service ");
-        EmployeeCmd employeeCmd = new EmployeeCmd(command.getEmpId(),command.getFirstName(),command.getLastName(),command.getEmail(),command.getAddress());
-        repository.save(employeeCmd);
+
+
+        if(validateUser(command.getEmail())) {
+            EmployeeCmd employeeCmd = new EmployeeCmd(command.getEmpId(), command.getFirstName(), command.getLastName(), command.getEmail(), command.getAddress());
+            repository.save(employeeCmd);
+        } else {
+            throw new DuplicateUser("User already exists with same email ",command.getEmail());
+        }
     }
 
     @Override
@@ -52,13 +58,19 @@ public class UserServiceImpl implements UserService {
         }
         repository.save(employee);
 
-
-
     }
 
     @Override
     public void deleteUser(DeleteUserCommand command){
         log.info("entered the delete user  service ");
         repository.deleteByEmail(command.getEmail());
+    }
+
+
+    public boolean validateUser(String id){
+        List<EmployeeCmd> emails = repository.findByEmail(id);
+       emails.forEach(e->log.info("User already Exists with email "));
+       log.debug("Duplicate Email");
+        return emails.isEmpty();
     }
 }
